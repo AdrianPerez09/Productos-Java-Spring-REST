@@ -4,6 +4,7 @@ import com.adrianEjemploSpringRest.apirest_productos.dto.AuthResponse;
 import com.adrianEjemploSpringRest.apirest_productos.dto.LoginRequest;
 import com.adrianEjemploSpringRest.apirest_productos.dto.RegisterRequest;
 import com.adrianEjemploSpringRest.apirest_productos.services.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest request) {
 
         authService.register(request);
 

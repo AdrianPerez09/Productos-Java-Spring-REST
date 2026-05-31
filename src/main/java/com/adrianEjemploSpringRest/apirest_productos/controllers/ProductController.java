@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/products")
 public class ProductController {
 
     private IProduct iProduct;
@@ -23,7 +24,7 @@ public class ProductController {
 
     /**
      * GET
-     * http://localhost:8080
+     * http://localhost:8080/products
      * @return lista todos los productos
      */
     @GetMapping
@@ -33,7 +34,7 @@ public class ProductController {
 
     /**
      * GET
-     * http://localhost:8080/{id}
+     * http://localhost:8080/products/{id}
      * @return El producto con el id especificado
      */
     @GetMapping("/{id}")
@@ -43,7 +44,7 @@ public class ProductController {
 
     /**
      * PUT
-     * http://localhost:8080/{id}
+     * http://localhost:8080/products/{id}
      * - Actualiza un producto por el mismo pero modificado (body)
      */
     @PutMapping
@@ -53,7 +54,7 @@ public class ProductController {
 
     /**
      * DELETE
-     * http://localhost:8080/{id}
+     * http://localhost:8080/products/{id}
      * - Elimina un producto con el id especificado
      */
     @DeleteMapping("/{idProducto}")

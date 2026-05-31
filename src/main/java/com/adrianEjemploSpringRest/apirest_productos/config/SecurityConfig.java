@@ -46,43 +46,22 @@ public class SecurityConfig {
                 // Configuración de permisos
                 .authorizeHttpRequests(auth -> auth
 
-                        /**
-                         * FILTROS JWT
-                         */
-
                         // Permitir acceso libre a login y registro
                         .requestMatchers("/auth/**").permitAll()
 
                         // Filtro que controla quien hace GET
-                        .requestMatchers(
-                                HttpMethod.GET,
-                                "/products/**"
-                        )
-                        .hasAnyRole("USER","ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/products/**").hasAnyRole("USER", "ADMIN")
 
                         // Filtro que controla quien hace POST
-                        .requestMatchers(
-                                HttpMethod.POST,
-                                "/products/**"
-                        )
-                        .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/products/**").hasRole("ADMIN")
 
                         // Filtro que controla quien hace PUT
-                        .requestMatchers(
-                                HttpMethod.PUT,
-                                "/products/**"
-                        )
-                        .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/products/**").hasRole("ADMIN")
 
                         // Filtro que controla quien hace DELETE
-                        .requestMatchers(
-                                HttpMethod.DELETE,
-                                "/products/**"
-                        )
-                        .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/products/**").hasRole("ADMIN")
 
-                        .anyRequest()
-                        .authenticated()
+                        .anyRequest().authenticated()
 
                 )
 
