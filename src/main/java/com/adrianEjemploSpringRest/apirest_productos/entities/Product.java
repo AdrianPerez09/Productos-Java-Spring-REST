@@ -25,11 +25,13 @@ public class Product {
     /**
      * Product name displayed to users.
      */
+    @Column(unique = true, nullable = false)
     private String name;
 
     /**
      * Full product description
      */
+    @Column(length = 1024)
     private String description;
 
     /**
