@@ -32,6 +32,7 @@ public class SecurityConfig {
 
         return http
 
+                .cors(cors -> {})
                 // Desactiva CSRF.
                 // En APIs REST con JWT normalmente no se utiliza.
                 .csrf(csrf -> csrf.disable())
