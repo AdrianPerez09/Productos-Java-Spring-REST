@@ -11,7 +11,8 @@ public class ProductServiceImp implements IProduct {
 
     private final ProductRepository productRepository;
 
-    public ProductServiceImp(ProductRepository productRepository) {
+    public ProductServiceImp(ProductRepository productRepository)
+    {
         this.productRepository = productRepository;
     }
 
@@ -44,6 +45,9 @@ public class ProductServiceImp implements IProduct {
         productDb.setName(product.getName());
         productDb.setDescription(product.getDescription());
         productDb.setPrice(product.getPrice());
+        productDb.setStock(product.getStock());
+        productDb.setCategory(product.getCategory());
+        productDb.setBrand(product.getBrand());
 
         return productRepository.save(productDb);
     }
