@@ -25,6 +25,7 @@ public class ProductController {
     /**
      * GET
      * http://localhost:8080/products
+     *
      * @return lista todos los productos
      */
     @GetMapping
@@ -35,11 +36,19 @@ public class ProductController {
     /**
      * GET
      * http://localhost:8080/products/{id}
+     *
      * @return El producto con el id especificado
      */
     @GetMapping("/{id}")
     public Product findById(@PathVariable Integer id) {
         return iProduct.findById(id);
+    }
+
+    @GetMapping("/category/{categoryId}")
+    public List<Product> getProductsByCategory(@PathVariable Long categoryId) {
+
+        return iProduct.findProductsByCategoryId(categoryId);
+
     }
 
     /**
