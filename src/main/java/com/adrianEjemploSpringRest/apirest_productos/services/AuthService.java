@@ -34,6 +34,8 @@ public class AuthService {
 
         user.setUsername(request.username());
 
+        user.setEmail(request.email());
+
         user.setPassword(passwordEncoder.encode(request.password()));
 
         user.setRole(Role.USER);
@@ -67,6 +69,6 @@ public class AuthService {
 
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
 
-        return new AuthResponse(accessToken, refreshToken.getToken(), user.getRole().name());
+        return new AuthResponse(accessToken, refreshToken.getToken(), user.getRole().name(), user.getUsername());
     }
 }
