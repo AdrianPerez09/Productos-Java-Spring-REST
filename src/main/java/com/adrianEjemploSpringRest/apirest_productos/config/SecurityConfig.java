@@ -32,7 +32,8 @@ public class SecurityConfig {
 
         return http
 
-                .cors(cors -> {})
+                .cors(cors -> {
+                })
                 // Desactiva CSRF.
                 // En APIs REST con JWT normalmente no se utiliza.
                 .csrf(csrf -> csrf.disable())
@@ -46,21 +47,75 @@ public class SecurityConfig {
 
                 // Configuración de permisos
                 .authorizeHttpRequests(auth -> auth
+                        /**
+                         * AUTH
+                         */
 
-                        // Permitir acceso libre a login y registro
                         .requestMatchers("/auth/**").permitAll()
 
-                        // Filtro que controla quien hace GET
-                        .requestMatchers(HttpMethod.GET, "/products/**").hasAnyRole("USER", "ADMIN")
+                        /**
+                         * DASHBOARD
+                         */
 
-                        // Filtro que controla quien hace POST
+                        .requestMatchers(HttpMethod.GET, "/dashboard/**").hasAnyRole("USER", "ADMIN")
+
+
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/products/**"
+                        ).permitAll()
+
+                                .requestMatchers(
+                                        HttpMethod.GET,
+                                        "/categories/**"
+                                ).permitAll()
+
+                                .requestMatchers(
+                                        HttpMethod.GET,
+                                        "/brands/**"
+                                ).permitAll()
+
+
+                        /**
+                         * PRODUCTS
+                         */
+
                         .requestMatchers(HttpMethod.POST, "/products/**").hasRole("ADMIN")
 
-                        // Filtro que controla quien hace PUT
                         .requestMatchers(HttpMethod.PUT, "/products/**").hasRole("ADMIN")
 
-                        // Filtro que controla quien hace DELETE
                         .requestMatchers(HttpMethod.DELETE, "/products/**").hasRole("ADMIN")
+
+                        /**
+                         * CATEGORIES
+                         */
+
+                        .requestMatchers(HttpMethod.POST, "/categories/**").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.PUT, "/categories/**").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.DELETE, "/categories/**").hasRole("ADMIN")
+
+                        /**
+                         * BRANDS
+                         */
+
+
+                        .requestMatchers(HttpMethod.POST, "/brands/**").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.PUT, "/brands/**").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.DELETE, "/brands/**").hasRole("ADMIN")
+
+                        /**
+                         * USERS
+                         */
+
+                        .requestMatchers("/users/**").hasRole("ADMIN")
+
+                        /**
+                         * CUALQUIER OTRA PETICIÓN
+                         */
 
                         .anyRequest().authenticated()
 

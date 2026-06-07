@@ -1,5 +1,6 @@
 package com.adrianEjemploSpringRest.apirest_productos.services;
 
+import com.adrianEjemploSpringRest.apirest_productos.entities.Category;
 import com.adrianEjemploSpringRest.apirest_productos.entities.Product;
 import com.adrianEjemploSpringRest.apirest_productos.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,8 @@ public class ProductServiceImp implements IProduct {
 
     private final ProductRepository productRepository;
 
-    public ProductServiceImp(ProductRepository productRepository) {
+    public ProductServiceImp(ProductRepository productRepository)
+    {
         this.productRepository = productRepository;
     }
 
@@ -23,6 +25,11 @@ public class ProductServiceImp implements IProduct {
     @Override
     public List<Product> findAll() {
         return productRepository.findAll();
+    }
+
+    @Override
+    public List<Product> findProductsByCategoryId(Long categoryId) {
+        return productRepository.findProductsByCategoryId(categoryId);
     }
 
     @Override
@@ -44,6 +51,9 @@ public class ProductServiceImp implements IProduct {
         productDb.setName(product.getName());
         productDb.setDescription(product.getDescription());
         productDb.setPrice(product.getPrice());
+        productDb.setStock(product.getStock());
+        productDb.setCategory(product.getCategory());
+        productDb.setBrand(product.getBrand());
 
         return productRepository.save(productDb);
     }
