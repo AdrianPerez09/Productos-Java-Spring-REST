@@ -1,5 +1,7 @@
 package com.adrianEjemploSpringRest.apirest_productos.services;
 
+import com.adrianEjemploSpringRest.apirest_productos.dto.ProductDto;
+import com.adrianEjemploSpringRest.apirest_productos.dto.ProductMapper;
 import com.adrianEjemploSpringRest.apirest_productos.entities.Category;
 import com.adrianEjemploSpringRest.apirest_productos.entities.Product;
 import com.adrianEjemploSpringRest.apirest_productos.repositories.ProductRepository;
@@ -11,10 +13,12 @@ import java.util.List;
 public class ProductServiceImp implements IProduct {
 
     private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
 
-    public ProductServiceImp(ProductRepository productRepository)
+    public ProductServiceImp(ProductRepository productRepository, ProductMapper productMapper)
     {
         this.productRepository = productRepository;
+        this.productMapper = productMapper;
     }
 
     @Override
@@ -30,6 +34,24 @@ public class ProductServiceImp implements IProduct {
     @Override
     public List<Product> findProductsByCategoryId(Long categoryId) {
         return productRepository.findProductsByCategoryId(categoryId);
+    }
+
+    @Override
+    public List<Product> findProductsByBrandId(Long brandId) {
+        return productRepository.findProductsByBrandId(brandId);
+    }
+
+    @Override
+    public List<ProductDto> searchProducts(
+            String query
+    ) {
+
+        return productRepository
+                .findTop10ByNameContainingIgnoreCase(query)
+                .stream()
+                .map(productMapper::toDto)
+                .toList();
+
     }
 
     @Override

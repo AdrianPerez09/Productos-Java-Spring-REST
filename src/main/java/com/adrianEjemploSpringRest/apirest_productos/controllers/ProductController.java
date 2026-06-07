@@ -1,5 +1,6 @@
 package com.adrianEjemploSpringRest.apirest_productos.controllers;
 
+import com.adrianEjemploSpringRest.apirest_productos.dto.ProductDto;
 import com.adrianEjemploSpringRest.apirest_productos.entities.Product;
 import com.adrianEjemploSpringRest.apirest_productos.services.IProduct;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,11 @@ public class ProductController {
     public Product save(@RequestBody Product product) {
         return iProduct.save(product);
     }
+
+
+
+
+    //QUERIES
 
     /**
      * GET
@@ -51,11 +57,39 @@ public class ProductController {
 
     }
 
+    @GetMapping("/brand/{id}")
+    public List<Product> findByBrand(
+
+            @PathVariable Long id
+
+    ) {
+
+        return iProduct.findProductsByBrandId(id);
+
+    }
+
+    @GetMapping("/search")
+    public List<ProductDto> search(
+
+            @RequestParam String q
+
+    ) {
+
+        return iProduct.searchProducts(q);
+
+    }
+
     /**
      * PUT
      * http://localhost:8080/products/{id}
      * - Actualiza un producto por el mismo pero modificado (body)
      */
+
+    //-------------------------------------------------------
+
+    // UPDATE
+
+
     @PutMapping
     public Product Update(@RequestBody Product product) {
         return iProduct.update(product);
@@ -66,6 +100,8 @@ public class ProductController {
      * http://localhost:8080/products/{id}
      * - Elimina un producto con el id especificado
      */
+
+    //----------------------------------------------------------
     @DeleteMapping("/{idProducto}")
     public void deleteById(@PathVariable("idProducto") Integer id) {
         iProduct.deleteById(id);

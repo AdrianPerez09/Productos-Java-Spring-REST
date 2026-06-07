@@ -1,5 +1,6 @@
 package com.adrianEjemploSpringRest.apirest_productos.services;
 
+import com.adrianEjemploSpringRest.apirest_productos.dto.ProductDto;
 import com.adrianEjemploSpringRest.apirest_productos.entities.Category;
 import com.adrianEjemploSpringRest.apirest_productos.entities.Product;
 
@@ -11,7 +12,12 @@ public interface IProduct {
 
     List<Product> findAll();
     List<Product> findProductsByCategoryId(Long categoryId);
+    List<Product> findProductsByBrandId(Long brandId);
+
+    List<ProductDto> searchProducts(String query);
+
     Product findById(Integer id);
+
 
     void deleteById(Integer id);
 
