@@ -1,6 +1,7 @@
 package com.adrianEjemploSpringRest.apirest_productos.controllers;
 
 import com.adrianEjemploSpringRest.apirest_productos.dto.ProductDto;
+import com.adrianEjemploSpringRest.apirest_productos.dto.ProductMapper;
 import com.adrianEjemploSpringRest.apirest_productos.entities.Product;
 import com.adrianEjemploSpringRest.apirest_productos.services.IProduct;
 import org.springframework.web.bind.annotation.*;
@@ -11,99 +12,126 @@ import java.util.List;
 @RequestMapping("/products")
 public class ProductController {
 
-    private IProduct iProduct;
+    private final IProduct iProduct;
 
+    private final ProductMapper productMapper;
 
-    public ProductController(IProduct iProduct) {
+    public ProductController(
+            IProduct iProduct,
+            ProductMapper productMapper
+    ) {
+
         this.iProduct = iProduct;
+
+        this.productMapper = productMapper;
+
     }
+
+    // ==========================================
+    // CREATE
+    // ==========================================
 
     @PostMapping
-    public Product save(@RequestBody Product product) {
+    public Product save(
+            @RequestBody Product product
+    ) {
+
         return iProduct.save(product);
+
     }
 
+    // ==========================================
+    // READ
+    // ==========================================
 
-
-
-    //QUERIES
-
-    /**
-     * GET
-     * http://localhost:8080/products
-     *
-     * @return lista todos los productos
-     */
     @GetMapping
-    public List<Product> findAll() {
-        return iProduct.findAll();
+    public List<ProductDto> findAll() {
+
+        return iProduct.findAll()
+
+                .stream()
+
+                .map(productMapper::toDto)
+
+                .toList();
+
     }
 
-    /**
-     * GET
-     * http://localhost:8080/products/{id}
-     *
-     * @return El producto con el id especificado
-     */
     @GetMapping("/{id}")
-    public Product findById(@PathVariable Integer id) {
-        return iProduct.findById(id);
+    public ProductDto findById(
+            @PathVariable Integer id
+    ) {
+
+        Product product =
+                iProduct.findById(id);
+
+        return productMapper.toDto(product);
+
     }
 
     @GetMapping("/category/{categoryId}")
-    public List<Product> getProductsByCategory(@PathVariable Long categoryId) {
+    public List<ProductDto> getProductsByCategory(
+            @PathVariable Long categoryId
+    ) {
 
-        return iProduct.findProductsByCategoryId(categoryId);
+        return iProduct.findProductsByCategoryId(categoryId)
+
+                .stream()
+
+                .map(productMapper::toDto)
+
+                .toList();
 
     }
 
     @GetMapping("/brand/{id}")
-    public List<Product> findByBrand(
-
+    public List<ProductDto> findByBrand(
             @PathVariable Long id
-
     ) {
 
-        return iProduct.findProductsByBrandId(id);
+        return iProduct.findProductsByBrandId(id)
+
+                .stream()
+
+                .map(productMapper::toDto)
+
+                .toList();
 
     }
 
     @GetMapping("/search")
     public List<ProductDto> search(
-
             @RequestParam String q
-
     ) {
 
         return iProduct.searchProducts(q);
 
     }
 
-    /**
-     * PUT
-     * http://localhost:8080/products/{id}
-     * - Actualiza un producto por el mismo pero modificado (body)
-     */
-
-    //-------------------------------------------------------
-
+    // ==========================================
     // UPDATE
-
+    // ==========================================
 
     @PutMapping
-    public Product Update(@RequestBody Product product) {
+    public Product update(
+            @RequestBody Product product
+    ) {
+
         return iProduct.update(product);
+
     }
 
-    /**
-     * DELETE
-     * http://localhost:8080/products/{id}
-     * - Elimina un producto con el id especificado
-     */
+    // ==========================================
+    // DELETE
+    // ==========================================
 
-    //----------------------------------------------------------
     @DeleteMapping("/{idProducto}")
-    public void deleteById(@PathVariable("idProducto") Integer id) {
+    public void deleteById(
+            @PathVariable("idProducto") Integer id
+    ) {
+
         iProduct.deleteById(id);
+
     }
+
 }
