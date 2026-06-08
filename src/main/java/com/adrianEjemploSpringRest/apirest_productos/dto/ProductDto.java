@@ -1,6 +1,7 @@
 package com.adrianEjemploSpringRest.apirest_productos.dto;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public record ProductDto(
 
@@ -8,7 +9,14 @@ public record ProductDto(
 
         String name,
 
-        BigDecimal price
+        String description,
 
+        BigDecimal price,
+
+        BrandDTO brand,
+
+        CategoryDTO category,
+
+        List<ProductImageDTO> images
 ) {
 }
