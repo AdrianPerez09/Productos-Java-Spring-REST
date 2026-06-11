@@ -3,6 +3,7 @@ package com.adrianEjemploSpringRest.apirest_productos.controllers;
 import com.adrianEjemploSpringRest.apirest_productos.dto.ProductDto;
 import com.adrianEjemploSpringRest.apirest_productos.dto.ProductMapper;
 import com.adrianEjemploSpringRest.apirest_productos.entities.Product;
+import com.adrianEjemploSpringRest.apirest_productos.repositories.ProductRepository;
 import com.adrianEjemploSpringRest.apirest_productos.services.IProduct;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,14 +15,17 @@ public class ProductController {
 
     private final IProduct iProduct;
 
+    private final ProductRepository productRepository;
+
     private final ProductMapper productMapper;
 
     public ProductController(
-            IProduct iProduct,
+            IProduct iProduct, ProductRepository productRepository,
             ProductMapper productMapper
     ) {
 
         this.iProduct = iProduct;
+        this.productRepository = productRepository;
 
         this.productMapper = productMapper;
 
@@ -101,10 +105,51 @@ public class ProductController {
 
     @GetMapping("/search")
     public List<ProductDto> search(
-            @RequestParam String q
+
+            @RequestParam(required = false)
+            String query,
+
+            @RequestParam(required = false)
+            Integer brandId,
+
+            @RequestParam(required = false)
+            Integer categoryId,
+
+            @RequestParam(required = false)
+            String sort
+
     ) {
 
-        return iProduct.searchProducts(q);
+        return iProduct.searchProducts(
+
+                query,
+
+                brandId,
+
+                categoryId,
+
+                sort
+
+        );
+
+    }
+
+    @GetMapping("/suggestions")
+    public List<ProductDto> suggestions(
+
+            @RequestParam String q
+
+    ) {
+
+        return productRepository
+
+                .findTop10ByNameContainingIgnoreCase(q)
+
+                .stream()
+
+                .map(productMapper::toDto)
+
+                .toList();
 
     }
 

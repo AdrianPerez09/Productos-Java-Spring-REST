@@ -5,6 +5,8 @@ import com.adrianEjemploSpringRest.apirest_productos.dto.ProductMapper;
 import com.adrianEjemploSpringRest.apirest_productos.entities.Category;
 import com.adrianEjemploSpringRest.apirest_productos.entities.Product;
 import com.adrianEjemploSpringRest.apirest_productos.repositories.ProductRepository;
+import com.adrianEjemploSpringRest.apirest_productos.specifications.ProductSpecification;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,8 +17,7 @@ public class ProductServiceImp implements IProduct {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
 
-    public ProductServiceImp(ProductRepository productRepository, ProductMapper productMapper)
-    {
+    public ProductServiceImp(ProductRepository productRepository, ProductMapper productMapper) {
         this.productRepository = productRepository;
         this.productMapper = productMapper;
     }
@@ -43,17 +44,42 @@ public class ProductServiceImp implements IProduct {
 
     @Override
     public List<ProductDto> searchProducts(
-            String query
+
+            String query,
+
+            Integer brandId,
+
+            Integer categoryId,
+
+            String sort
+
     ) {
 
-        return productRepository
-                .findTop10ByNameContainingIgnoreCase(query)
+        Specification<Product> specification =
+
+                (root, criteriaQuery, criteriaBuilder) ->
+
+                        criteriaBuilder.conjunction();
+
+
+        specification = applyNameFilter(specification, query);
+
+        specification = applyBrandFilter(specification, brandId);
+
+        specification = applyCategoryFilter(specification, categoryId);
+
+        List<Product> products = productRepository.findAll(specification);
+
+        products = applySorting(products, sort);
+
+        return products
+
                 .stream()
+
                 .map(productMapper::toDto)
+
                 .toList();
-
     }
-
     @Override
     public Product findById(Integer id) {
         return productRepository.findById(id).get();
@@ -78,5 +104,127 @@ public class ProductServiceImp implements IProduct {
         productDb.setBrand(product.getBrand());
 
         return productRepository.save(productDb);
+    }
+
+
+    // Filtros y Sorting
+
+
+    private Specification<Product> applyNameFilter(
+
+            Specification<Product> specification,
+
+            String query
+    ) {
+        if (
+                query == null ||
+
+                        query.isBlank()
+        ) {
+            return specification;
+        }
+
+        return specification.and(
+                ProductSpecification.hasName(query)
+        );
+
+    }
+
+    private Specification<Product> applyBrandFilter(
+
+            Specification<Product> specification,
+
+            Integer brandId
+
+    ) {
+        if (
+                brandId == null
+        ) {
+            return specification;
+        }
+        return specification.and(
+
+                ProductSpecification
+                        .hasBrand(brandId)
+        );
+    }
+
+    private Specification<Product> applyCategoryFilter(
+
+            Specification<Product> specification,
+
+            Integer categoryId
+    ) {
+        if (
+                categoryId == null
+        ) {
+            return specification;
+        }
+        return specification.and(
+
+                ProductSpecification
+                        .hasCategory(categoryId)
+
+        );
+    }
+
+    private List<Product> applySorting(
+
+            List<Product> products,
+
+            String sort
+
+    ) {
+
+        if (
+
+                sort == null ||
+
+                        sort.isBlank()
+
+        ) {
+
+            return products;
+
+        }
+
+        switch (sort) {
+
+            case "price-asc" ->
+
+                    products.sort(
+
+                            (first, second) ->
+
+                                    first.getPrice()
+
+                                            .compareTo(
+
+                                                    second.getPrice()
+
+                                            )
+
+                    );
+
+            case "price-desc" ->
+
+                    products.sort(
+
+                            (first, second) ->
+
+                                    second.getPrice()
+
+                                            .compareTo(
+
+                                                    first.getPrice()
+
+                                            )
+
+                    );
+
+        }
+
+        return products;
+
     }
 }
