@@ -141,15 +141,7 @@ public class ProductController {
 
     ) {
 
-        return productRepository
-
-                .findTop10ByNameContainingIgnoreCase(q)
-
-                .stream()
-
-                .map(productMapper::toDto)
-
-                .toList();
+        return iProduct.getSuggestions(q);
 
     }
 

@@ -44,7 +44,6 @@ public class ProductServiceImp implements IProduct {
 
     @Override
     public List<ProductDto> searchProducts(
-
             String query,
 
             Integer brandId,
@@ -52,7 +51,6 @@ public class ProductServiceImp implements IProduct {
             Integer categoryId,
 
             String sort
-
     ) {
 
         Specification<Product> specification =
@@ -106,6 +104,23 @@ public class ProductServiceImp implements IProduct {
         return productRepository.save(productDb);
     }
 
+    @Override
+    public List<ProductDto> getSuggestions(
+            String query
+    ) {
+
+        return productRepository
+
+                .findTop10ByNameContainingIgnoreCase(query)
+
+                .stream()
+
+                .map(productMapper::toDto)
+
+                .toList();
+
+    }
+
 
     // Filtros y Sorting
 
@@ -125,7 +140,7 @@ public class ProductServiceImp implements IProduct {
         }
 
         return specification.and(
-                ProductSpecification.hasName(query)
+                ProductSpecification.hasSearchTerm(query)
         );
 
     }
@@ -211,17 +226,11 @@ public class ProductServiceImp implements IProduct {
                     products.sort(
 
                             (first, second) ->
-
                                     second.getPrice()
-
                                             .compareTo(
-
                                                     first.getPrice()
-
                                             )
-
                     );
-
         }
 
         return products;

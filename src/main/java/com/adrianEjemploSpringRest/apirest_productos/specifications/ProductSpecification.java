@@ -6,23 +6,93 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class ProductSpecification {
 
-    public static Specification<Product> hasName(String query) {
+    public static Specification<Product> hasSearchTerm(
+            String query
+    ) {
 
-        return (root, criteriaQuery, criteriaBuilder) ->
+        String searchTerm =
 
-                criteriaBuilder.like(
+                "%" +
 
-                        criteriaBuilder.lower(
+                        query.toLowerCase()
 
-                                root.get("name")
+                        + "%";
+
+        return (
+
+                root,
+                criteriaQuery,
+                criteriaBuilder
+
+        ) ->
+
+                criteriaBuilder.or(
+
+                    /* ==========================
+                       PRODUCT NAME
+                    ========================== */
+
+                        criteriaBuilder.like(
+
+                                criteriaBuilder.lower(
+
+                                        root.get("name")
+
+                                ),
+
+                                searchTerm
 
                         ),
 
-                        "%" +
+                    /* ==========================
+                       BRAND NAME
+                    ========================== */
 
-                                query.toLowerCase()
+                        criteriaBuilder.like(
 
-                                + "%"
+                                criteriaBuilder.lower(
+
+                                        root.get("brand")
+                                                .get("name")
+
+                                ),
+
+                                searchTerm
+
+                        ),
+
+                    /* ==========================
+                       CATEGORY NAME
+                    ========================== */
+
+                        criteriaBuilder.like(
+
+                                criteriaBuilder.lower(
+
+                                        root.get("category")
+                                                .get("name")
+
+                                ),
+
+                                searchTerm
+
+                        ),
+
+                        /* ==========================
+                           PRODUCT Description
+                        ========================== */
+
+                        criteriaBuilder.like(
+
+                                criteriaBuilder.lower(
+
+                                        root.get("description")
+
+                                ),
+
+                                searchTerm
+
+                        )
 
                 );
 

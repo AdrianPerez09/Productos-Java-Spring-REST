@@ -17,6 +17,8 @@ public interface IProduct {
 
     List<ProductDto> searchProducts(String query, Integer brandId, Integer categoryId, String sort);
 
+    List<ProductDto> getSuggestions(String query);
+
     Product findById(Integer id);
 
 
