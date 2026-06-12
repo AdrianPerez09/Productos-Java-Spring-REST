@@ -4,19 +4,22 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+@Setter
+@Getter
 @Entity
-@Table(name = "marcas")
-public class Brand {
+@Table(name = "product_images")
+public class ProductImage {
 
-    @Setter
-    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Setter
-    @Getter
-    @Column(nullable = false, unique = true)
-    private String name;
+    private String imageUrl;
+
+    private boolean thumbnail;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
 }

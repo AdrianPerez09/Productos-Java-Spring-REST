@@ -50,6 +50,6 @@ public class AuthController {
 
         String accessToken = jwtService.generateToken(user);
 
-        return new AuthResponse(accessToken, refreshToken.getToken(), user.getRole().name());
+        return new AuthResponse(accessToken, refreshToken.getToken(), user.getRole().name(), user.getUsername());
     }
 }

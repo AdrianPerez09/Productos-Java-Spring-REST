@@ -1,5 +1,6 @@
 package com.adrianEjemploSpringRest.apirest_productos.services;
 
+import com.adrianEjemploSpringRest.apirest_productos.dto.BrandDTO;
 import com.adrianEjemploSpringRest.apirest_productos.entities.Brand;
 import com.adrianEjemploSpringRest.apirest_productos.repositories.BrandRepository;
 import org.springframework.stereotype.Service;
@@ -7,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class BrandServiceImp implements iBrand{
+public class BrandServiceImp implements iBrand {
 
     private final BrandRepository brandRepository;
 
@@ -40,5 +41,29 @@ public class BrandServiceImp implements iBrand{
         Brand updatedBrand = brandRepository.findById(brand.getId()).get();
         updatedBrand.setName(brand.getName());
         return brandRepository.save(updatedBrand);
+    }
+
+    @Override
+    public List<BrandDTO> findBrandsByCategory(
+            Integer categoryId
+    ) {
+        return brandRepository
+
+                .findBrandsByCategoryId(categoryId)
+
+                .stream()
+
+                .map(brand ->
+
+                        new BrandDTO(
+
+                                brand.getId(),
+
+                                brand.getName()
+
+                        )
+                )
+
+                .toList();
     }
 }

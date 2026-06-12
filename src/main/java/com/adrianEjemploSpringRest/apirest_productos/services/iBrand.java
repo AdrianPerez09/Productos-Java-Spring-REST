@@ -1,5 +1,6 @@
 package com.adrianEjemploSpringRest.apirest_productos.services;
 
+import com.adrianEjemploSpringRest.apirest_productos.dto.BrandDTO;
 import com.adrianEjemploSpringRest.apirest_productos.entities.Brand;
 
 import java.util.List;
@@ -13,5 +14,14 @@ public interface iBrand {
     void deleteById(Integer id);
 
     Brand update(Brand brand);
+
+        /* ==========================================
+       FILTERS
+    ========================================== */
+
+    List<BrandDTO> findBrandsByCategory(
+            Integer categoryId
+    );
+
 }
 
